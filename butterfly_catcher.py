@@ -24,17 +24,17 @@ class RedBrick(pygame.sprite.Sprite):
       self.direction *= -1
 
 class BlueBrick(pygame.sprite.Sprite):
-  TOP, RIGHT, BOTTOM, LEFT = 0, 1, 2, 3
+  LEFT, TOP, RIGHT, BOTTOM = 0, 1, 2, 3 
   
   def __init__(self, start_rect):
     pygame.sprite.Sprite.__init__(self, self.containers)
     self.rect = start_rect
     
     self.images = list()
+    self.images.insert(self.LEFT, pygame.Surface((self.rect.height, self.rect.width)).convert())
     self.images.insert(self.TOP, pygame.Surface((self.rect.width, self.rect.height)).convert())
     self.images.insert(self.RIGHT, pygame.Surface((self.rect.height, self.rect.width)).convert())
-    self.images.insert(self.BOTTOM, pygame.Surface((self.rect.width, self.rect.height)).convert())
-    self.images.insert(self.LEFT, pygame.Surface((self.rect.height, self.rect.width)).convert())
+    # self.images.insert(self.BOTTOM, pygame.Surface((self.rect.width, self.rect.height)).convert())
     
     for i, image in enumerate(self.images):
       sticky_half, bouncy_half = image.get_rect(), image.get_rect() #each call returns a new rect
@@ -51,9 +51,9 @@ class BlueBrick(pygame.sprite.Sprite):
         
       elif i == self.RIGHT or i == self.LEFT:
         # Move each half into position
-        if i == self.RIGHT:
+        if i == self.LEFT:
           bouncy_half.left = bouncy_half.width/2
-        elif i == self.LEFT:
+        elif i == self.RIGHT:
           sticky_half.left = sticky_half.width/2
         
         sticky_half.width = sticky_half.width/2
@@ -70,14 +70,16 @@ class BlueBrick(pygame.sprite.Sprite):
     self.rect.clamp_ip(SCREEN_RECT)
     
   def flip(self, direction):
-    self.rect.width, self.rect.height, self.rect.center = self.rect.height, self.rect.width, self.rect.center
-    
     self.orientation += direction
-    if self.orientation >= len(self.images):
-      self.orientation = 0
-    elif self.orientation <= 0:
+    if self.orientation > len(self.images) - 1:
       self.orientation = len(self.images) - 1
+      return
+    elif self.orientation < 0:
+      self.orientation = 0
+      return
       
+    print self.orientation
+    self.rect.width, self.rect.height, self.rect.center = self.rect.height, self.rect.width, self.rect.center
     self.image = self.images[self.orientation]
 
 def main():
@@ -124,10 +126,10 @@ def main():
             return
         elif event.type == KEYDOWN and (event.key == K_z or event.key == K_SPACE):
           for b in blue.sprites():
-            b.flip(1)
+            b.flip(-1)
         elif event.type == KEYDOWN and event.key == K_x:
           for b in blue.sprites():
-            b.flip(-1)
+            b.flip(1)
 
     # Modify velocity based on keypresses
     keystate = pygame.key.get_pressed()
