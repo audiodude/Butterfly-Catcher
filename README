@@ -14,6 +14,12 @@ Once you've installed pygame, simply run the script with the command:
 $ python butterfly_catcher.py
 
 
+Game Instructions:
+<LEFT, RIGHT, UP, DOWN> = move the Net/Paddle
+<X> = rotate the Net/Paddle clockwise
+<Z> = rotate the Net/Paddle anti-clockwise
+
+
 Author: Travis Briggs, briggs.travis (at) gmail.com
 ===================================================
 Copyright (C) 2011 Travis Briggs
