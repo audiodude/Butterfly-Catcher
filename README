@@ -1,0 +1,32 @@
+Butterfly Catcher: A simple 80s-arcade style game using the pygame framework.
+
+Currently a prototype/proof of concept.
+
+Installing and running:
+Note: This game is launched from the command line, and requires manual
+installation of the pygame framework.
+
+You will need to install the pygame framework, available for all major
+platforms at <http://pygame.org>. Developed on version 1.9.1, with heavy use
+of the Sprite module which I believe was introduced in 1.8.
+
+Once you've installed pygame, simply run the script with the command:
+$ python butterfly_catcher.py
+
+
+Author: Travis Briggs, briggs.travis (at) gmail.com
+===================================================
+Copyright (C) 2011 Travis Briggs
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
