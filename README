@@ -15,10 +15,10 @@ $ python butterfly_catcher.py
 
 
 Game Instructions:
-<LEFT, RIGHT, UP, DOWN> = move the Net/Paddle
-<X> = rotate the Net/Paddle clockwise
-<Z> = rotate the Net/Paddle anti-clockwise
-
+<LEFT, RIGHT, UP, DOWN> - move the Net/Paddle
+<X> - rotate the Net/Paddle clockwise
+<Z> - rotate the Net/Paddle anti-clockwise
+<ESC> - quit the game (or just close the window)
 
 Author: Travis Briggs, briggs.travis (at) gmail.com
 ===================================================
