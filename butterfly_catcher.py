@@ -24,7 +24,6 @@ class RedBrick(pygame.sprite.Sprite):
 
   # The paddle hit me, escape!
   def escape(self, paddle):
-    self.direction *= -1
     while Rect.colliderect(self.rect, paddle.rect):
       relative_pos = self.rect.centery - paddle.rect.centery
       if relative_pos > 0:
@@ -119,7 +118,7 @@ def main():
   
   # Init the screen
   screen = pygame.display.set_mode((SCREEN_RECT.width, SCREEN_RECT.height))
-  pygame.display.set_caption('Hello Pygame')
+  pygame.display.set_caption('Butterfly Catcher')
   pygame.mouse.set_visible(0)
   
   # The background
