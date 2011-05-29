@@ -8,7 +8,6 @@ SCREEN_RECT = Rect(0, 0, 640, 480)
 # Made up units, in terms of the screen size
 PTX = SCREEN_RECT.width/32
 
-
 class RedBrick(pygame.sprite.Sprite):
   def __init__(self, start_rect):
     pygame.sprite.Sprite.__init__(self, self.containers)
@@ -52,7 +51,7 @@ def main():
   
   # Init the screen
   screen = pygame.display.set_mode((SCREEN_RECT.width, SCREEN_RECT.height))
-  pygame.display.set_caption('Hello Pygame')
+  pygame.display.set_caption('Butterfly Catcher')
   pygame.mouse.set_visible(0)
   
   # The background
