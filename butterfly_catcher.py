@@ -48,36 +48,45 @@ class BlueBrick(pygame.sprite.Sprite):
     self.image = self.images[self.orientation]
 
 class Score(pygame.sprite.Sprite):
-  def __init__(self, position=(0,0), scorekeeper=None, centered=True):
+  def __init__(self, position=(0,0), scorekeeper=None, centered=True, bottomed=False, fmt_string="%d", color=Color('white')):
     pygame.sprite.Sprite.__init__(self)
     self.position = list(position)[0:2]
     self.scorekeeper = scorekeeper
     self.centered = centered
+    self.bottomed = bottomed
+    self.fmt_string = fmt_string
+    self.color = color
     
     self.font = pygame.font.SysFont('verdana,arial', 32, bold=True)
-    self.color = Color('white')
-    self.lastscore = -1
+    self.lastscore = None
     self.update()
     
     img_rect = self.image.get_rect()
     if self.centered:
       self.position[0] -= img_rect.width/2
+    if self.bottomed:
+      self.position[1] -= img_rect.height
+    
     self.rect = img_rect.move(self.position)
 
   def update(self):
-    score = (self.scorekeeper and self.scorekeeper.current_score()) or 0
+    score = (self.scorekeeper and self.scorekeeper()) or 0
     if score != self.lastscore:
       self.lastscore = score
-      msg = "%d" % score
+      msg = self.fmt_string % score
       self.image = self.font.render(msg, 0, self.color, BG_COLOR)
 
 class MainController():
   # placeholder
   def __init__(self):
     self.score = 0
+    self.time_remaining_millis = 30000
     
   def current_score(self):
     return self.score
+    
+  def time_remaining_secs(self):
+    return self.time_remaining_millis/1000.0
     
   def main(self):
     pygame.init()
@@ -100,7 +109,10 @@ class MainController():
   
     # Ladies and Gentlemen, our Sprites!
     if pygame.font:
-        all.add(Score(SCREEN_RECT.midtop, scorekeeper=self))
+        all.add(Score(SCREEN_RECT.midtop, scorekeeper=self.current_score))
+        
+        # Awesome hack here. The timer is just a Score that uses #time_remaining_secs as its scorekeeper
+        all.add(Score(SCREEN_RECT.midbottom, scorekeeper=self.time_remaining_secs, bottomed=True, fmt_string="%2.2f", color=Color('yellow')))
       
     RedBrick.containers = all, red
     for i in range(4):
@@ -117,16 +129,22 @@ class MainController():
     ACCEL = 20
   
     while True:
-      clock.tick(60)
-    
+      # decrement the timer and limit the framerate to 60fps
+      self.time_remaining_millis -= clock.tick(60)
+        
       for event in pygame.event.get():
           if event.type == QUIT:
-              return #Game Over
+              return self.score #Game Over
           elif event.type == KEYDOWN and event.key == K_ESCAPE:
-              return
+              return self.score #Game Over
           elif event.type == KEYDOWN and (event.key == K_z or event.key == K_x or event.key == K_SPACE):
             for b in blue.sprites():
               b.flip()
+
+      # This hack 'freezes' the game when the time runs out.
+      # Since it comes after event queue processing, you can still quit (and FIXME: flip the paddles, but the screen doesn't update).
+      if self.time_remaining_millis <= 0:
+        continue
 
       # Modify velocity based on keypresses
       keystate = pygame.key.get_pressed()
@@ -153,16 +171,17 @@ class MainController():
         self.score += 1 # you get a cookie
         
         # Make a new butterfly in a random spot
-        RedBrick(Rect(int(random.random()*(SCREEN_RECT.width-PTX)),
-                      int(random.random()*(SCREEN_RECT.height-PTX)),
+        new_spot = Rect(int(random.random()*(SCREEN_RECT.width-PTX*2)+PTX),
+                      int(random.random()*(SCREEN_RECT.height-PTX*2)+PTX),
                       PTX,
-                      PTX).clamp(SCREEN_RECT))
+                      PTX).clamp(SCREEN_RECT) 
+        RedBrick(new_spot)
 
       #draw the scene
       dirty = all.draw(screen)
       pygame.display.update(dirty)
   
 if __name__ == '__main__':
-  MainController().main()
+  print MainController().main()
 
   
