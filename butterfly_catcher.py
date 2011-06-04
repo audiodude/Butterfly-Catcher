@@ -80,13 +80,19 @@ class MainController():
   # placeholder
   def __init__(self):
     self.score = 0
-    self.time_remaining_millis = 30000
+    self.total_time_millis = 0
     
   def current_score(self):
     return self.score
     
   def time_remaining_secs(self):
-    return self.time_remaining_millis/1000.0
+    return self.time_remaining_millis()/1000.0
+
+  def time_remaining_millis(self):
+    return 30000 - self.total_time_millis
+    
+  def total_time_secs(self):
+    return self.total_time_millis/1000.0
     
   def main(self):
     pygame.init()
@@ -130,7 +136,8 @@ class MainController():
   
     while True:
       # decrement the timer and limit the framerate to 60fps
-      self.time_remaining_millis -= clock.tick(60)
+      if self.time_remaining_millis() > 0:
+        self.total_time_millis += clock.tick(60)
         
       for event in pygame.event.get():
           if event.type == QUIT:
@@ -143,7 +150,7 @@ class MainController():
 
       # This hack 'freezes' the game when the time runs out.
       # Since it comes after event queue processing, you can still quit (and FIXME: flip the paddles, but the screen doesn't update).
-      if self.time_remaining_millis <= 0:
+      if self.time_remaining_millis() <= 0:
         continue
 
       # Modify velocity based on keypresses
@@ -182,6 +189,8 @@ class MainController():
       pygame.display.update(dirty)
   
 if __name__ == '__main__':
-  print MainController().main()
+  mc = MainController()
+  mc.main()
+  print '%d in %2.2f seconds' % (mc.score, mc.total_time_secs())
 
   
