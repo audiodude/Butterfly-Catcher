@@ -32,7 +32,7 @@ class BlueBrick(pygame.sprite.Sprite):
     self.images = { 1 : pygame.Surface((self.rect.width, self.rect.height)).convert(),
                    -1 : pygame.Surface((self.rect.height, self.rect.width)).convert()}
     
-    for image in self.images.values():
+    for image in list(self.images.values()):
       image.fill((0,0,255))
 
     self.orientation = 1
@@ -77,7 +77,6 @@ class Score(pygame.sprite.Sprite):
       self.image = self.font.render(msg, 0, self.color, BG_COLOR)
 
 class MainController():
-  # placeholder
   def __init__(self):
     self.score = 0
     self.total_time_millis = 0
@@ -140,6 +139,7 @@ class MainController():
         self.total_time_millis += clock.tick(60)
         
       for event in pygame.event.get():
+          print(event)
           if event.type == QUIT:
               return self.score #Game Over
           elif event.type == KEYDOWN and event.key == K_ESCAPE:
@@ -155,7 +155,7 @@ class MainController():
 
       # Modify velocity based on keypresses
       keystate = pygame.key.get_pressed()
-      for state, idx in zip((K_RIGHT, K_LEFT, K_UP, K_DOWN), range(4)):
+      for state, idx in zip((K_RIGHT, K_LEFT, K_UP, K_DOWN), list(range(4))):
         if keystate[state]:
           velocity[idx] += 1
           if velocity[idx] > 16:
@@ -174,7 +174,7 @@ class MainController():
       all.update()
     
       # Did any of the red bricks get captured?
-      for r in pygame.sprite.groupcollide(blue, red, 0, 1).values():
+      for r in list(pygame.sprite.groupcollide(blue, red, 0, 1).values()):
         self.score += 1 # you get a cookie
         
         # Make a new butterfly in a random spot
@@ -191,6 +191,6 @@ class MainController():
 if __name__ == '__main__':
   mc = MainController()
   mc.main()
-  print '%d in %2.2f seconds' % (mc.score, mc.total_time_secs())
+  print('%d in %2.2f seconds' % (mc.score, mc.total_time_secs()))
 
   
